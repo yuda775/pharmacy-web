@@ -26,19 +26,23 @@ class UserResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                TextInput::make('name')->required(),
-                TextInput::make('email')->required(),
-                TextInput::make('password')
-                    ->password()
-                    ->revealable()
-                    ->required(),
-                Select::make('roles')
-                    ->relationship('roles', 'name')
-                    ->multiple()
-                    ->preload()
-                    ->searchable(),
-            ]);
+        ->schema([
+            TextInput::make('name')->required(),
+            TextInput::make('email')->email()->required(),
+            TextInput::make('password')
+                ->password()
+                ->revealable()
+                // Hanya required saat create
+                ->required(fn (string $operation): bool => $operation === 'create')
+                // Hash nilai sebelum disimpan
+                ->dehydrateStateUsing(fn (?string $state): ?string => filled($state) ? Hash::make($state) : null)
+                // Hanya simpan ketika ada input
+                ->dehydrated(fn (?string $state): bool => filled($state)),
+            Select::make('roles')
+                ->relationship('roles', 'name')
+                ->multiple()
+                ->preload(),
+        ]);
     }
 
     public static function table(Table $table): Table

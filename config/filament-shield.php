@@ -56,7 +56,7 @@ return [
         'pages' => true,
         'widgets' => true,
         'resources' => true,
-        'custom_permissions' => false,
+        'custom_permissions' => true,
     ],
 
     'generator' => [
@@ -88,5 +88,11 @@ return [
     'register_role_policy' => [
         'enabled' => true,
     ],
+
+    'auth' => [
+        'guard' => 'web',
+        'user_model' => App\Models\User::class,
+    ],
+
 
 ];

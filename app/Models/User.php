@@ -28,6 +28,12 @@ class User extends Authenticatable implements FilamentUser
         'password',
     ];
 
+
+    public function canAccessPanel(\Filament\Panel $panel): bool
+    {
+        return $this->can('access_filament');
+    }
+
     public function schedules()
     {
         return $this->belongsToMany(Schedule::class)->withTimestamps();
